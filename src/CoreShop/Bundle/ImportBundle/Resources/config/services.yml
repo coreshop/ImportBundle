@@ -1,0 +1,73 @@
+services:
+#    core_shop_import.example:
+#        class: CoreShop\Bundle\ImportBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+  coreshop.registry.import:
+    class: CoreShop\Component\Registry\ServiceRegistry
+    arguments:
+      - 'CoreShop\Bundle\ImportBundle\Import\ImportInterface'
+      - 'coreshop-import-definitions'
+
+  coreshop.importer.shipping_rules:
+    class: CoreShop\Bundle\ImportBundle\Import\ShippingRuleImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'shipping_rule' }
+
+  coreshop.importer.carrier:
+    class: CoreShop\Bundle\ImportBundle\Import\CarrierImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'carrier' }
+
+  coreshop.importer.zone:
+    class: CoreShop\Bundle\ImportBundle\Import\ZoneImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'zone' }
+
+  coreshop.importer.currency:
+    class: CoreShop\Bundle\ImportBundle\Import\CurrencyImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'currency' }
+
+  coreshop.importer.country:
+    class: CoreShop\Bundle\ImportBundle\Import\CountryImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'country' }
+
+  coreshop.importer.state:
+    class: CoreShop\Bundle\ImportBundle\Import\CountryImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'state' }
+
+  coreshop.importer.store:
+    class: CoreShop\Bundle\ImportBundle\Import\StoreImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'store' }
+
+  coreshop.importer.tax_rate:
+    class: CoreShop\Bundle\ImportBundle\Import\TaxRateImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'tax_rate' }
+
+  coreshop.importer.tax_rule_group:
+    class: CoreShop\Bundle\ImportBundle\Import\TaxRuleGroupImport
+    arguments:
+      - '@service_container'
+    tags:
+      - { name: coreshop.importer, type: 'tax_rule_group' }
