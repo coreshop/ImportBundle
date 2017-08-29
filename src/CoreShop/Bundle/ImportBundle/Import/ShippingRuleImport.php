@@ -23,10 +23,10 @@ final class ShippingRuleImport extends AbstractResourcesImport implements Depend
     public function getDependencies()
     {
         return [
-            //ProductImport::class,
-            //CategoryImport::class,
-            //CountryImport::class,
-            //CurrencyImport::class,
+            ProductImport::class,
+            ProductCategoryImport::class,
+            CountryImport::class,
+            CurrencyImport::class,
             ZoneImport::class,
             CountryImport::class,
             //CustomerGroupImport::class,

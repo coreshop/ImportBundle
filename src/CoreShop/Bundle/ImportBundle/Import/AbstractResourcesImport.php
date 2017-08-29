@@ -5,7 +5,7 @@ namespace CoreShop\Bundle\ImportBundle\Import;
 use CoreShop\Component\Resource\Factory\FactoryInterface;
 use CoreShop\Component\Resource\Repository\RepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class AbstractResourcesImport implements ImportInterface
 {

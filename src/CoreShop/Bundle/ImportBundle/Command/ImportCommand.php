@@ -14,9 +14,11 @@ namespace CoreShop\Bundle\ImportBundle\Command;
 
 use CoreShop\Bundle\ImportBundle\Import\ImportInterface;
 use CoreShop\Bundle\ImportBundle\Loader\Loader;
+use Pimcore\Model\Version;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportCommand extends ContainerAwareCommand
@@ -29,7 +31,8 @@ final class ImportCommand extends ContainerAwareCommand
         $this
             ->setName('coreshop:import')
             ->setDescription('Import File which has been exported from CoreShopExport Pimcore 4.* Plugin')
-            ->addArgument('importFile');
+            ->addArgument('importFile')
+            ->addOption('ignore-cache', 'c',  InputOption::VALUE_NONE);
     }
 
     /**
@@ -42,6 +45,9 @@ final class ImportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        Version::disable();
+
+        $ignoreCache = $input->getOption('ignore-cache');
         $data = file_get_contents($input->getArgument('importFile'));
         $data = json_decode($data, true);
 
@@ -67,8 +73,13 @@ final class ImportCommand extends ContainerAwareCommand
          */
         foreach ($importerServices as $importer) {
             $progressBar->setMessage(sprintf('Run cleanup for %s', $importer->getType()));
+            $progressBar->display();
 
-            $importer->cleanup();
+            $idMapCacheFile = sprintf('%s/%s_id_map.serialized', PIMCORE_SYSTEM_TEMP_DIRECTORY, $importer->getType());
+
+            if (!file_exists($idMapCacheFile) || $ignoreCache) {
+                $importer->cleanup();
+            }
 
             $progressBar->advance();
         }
@@ -80,15 +91,47 @@ final class ImportCommand extends ContainerAwareCommand
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% (%elapsed:6s%/%estimated:-6s%) %message%');
         $progressBar->start();
 
+        $idMap = [
+            'store' => [
+                8 => 9,
+                3 => 4,
+                2 => 3,
+                6 => 7,
+                7 => 8,
+                1 => 2,
+                4 => 5,
+                5 => 6
+            ],
+            'currency' => [
+                1 => 159,
+                30 => 160
+            ],
+            'tax_rule_group' => [
+                1 => 4
+            ]
+        ];
+
         /**
          * @var $importer ImportInterface
          */
         foreach ($importerServices as $importer) {
             $progressBar->setMessage(sprintf('Run persist for %s', $importer->getType()));
+            $progressBar->display();
 
             $idMap[$importer->getType()] = [];
 
-            $idMap = array_merge($idMap, $importer->persistData($data[$importer->getType()], $idMap));
+            $idMapCacheFile = sprintf('%s/%s_id_map.serialized', PIMCORE_SYSTEM_TEMP_DIRECTORY, $importer->getType());
+
+            if (!file_exists($idMapCacheFile) || $ignoreCache) {
+                $idMap = array_merge($idMap, $importer->persistData($data[$importer->getType()], $idMap));
+
+                $idMapContent = serialize($idMap);
+                file_put_contents($idMapCacheFile, $idMapContent);
+            }
+            else {
+                $idMapContent = file_get_contents($idMapCacheFile);
+                $idMap = array_merge($idMap, file_get_contents($idMapContent));
+            }
 
             $progressBar->advance();
         }
