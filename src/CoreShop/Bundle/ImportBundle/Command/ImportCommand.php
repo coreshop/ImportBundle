@@ -91,26 +91,6 @@ final class ImportCommand extends ContainerAwareCommand
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% (%elapsed:6s%/%estimated:-6s%) %message%');
         $progressBar->start();
 
-        $idMap = [
-            'store' => [
-                8 => 9,
-                3 => 4,
-                2 => 3,
-                6 => 7,
-                7 => 8,
-                1 => 2,
-                4 => 5,
-                5 => 6
-            ],
-            'currency' => [
-                1 => 159,
-                30 => 160
-            ],
-            'tax_rule_group' => [
-                1 => 4
-            ]
-        ];
-
         /**
          * @var $importer ImportInterface
          */
