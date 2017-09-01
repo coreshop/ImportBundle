@@ -2,16 +2,6 @@
 
 namespace CoreShop\Bundle\ImportBundle\Import;
 
-use CoreShop\Component\Core\Model\CarrierInterface;
-use CoreShop\Component\Resource\Factory\FactoryInterface;
-use CoreShop\Component\Resource\Model\AbstractObject;
-use CoreShop\Component\Resource\Repository\RepositoryInterface;
-use CoreShop\Component\Shipping\Model\ShippingRuleGroupInterface;
-use Pimcore\Logger;
-use Pimcore\Model\Object\ClassDefinition\Data\Fieldcollections;
-use Pimcore\Model\Object\Concrete;
-use Pimcore\Model\Object\Service;
-use Pimcore\Tool;
 
 final class ProductImport extends AbstractPimcoreImport implements DependentImporterInterface
 {

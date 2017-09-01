@@ -6,9 +6,9 @@ use CoreShop\Component\Resource\Factory\FactoryInterface;
 use CoreShop\Component\Resource\Model\AbstractObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Pimcore\Logger;
-use Pimcore\Model\Object\ClassDefinition\Data\Fieldcollections;
-use Pimcore\Model\Object\Concrete;
-use Pimcore\Model\Object\Service;
+use Pimcore\Model\DataObject\ClassDefinition\Data\Fieldcollections;
+use Pimcore\Model\DataObject\Concrete;
+use Pimcore\Model\DataObject\Service;
 use Pimcore\Tool;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
